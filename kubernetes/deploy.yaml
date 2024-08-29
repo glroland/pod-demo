@@ -1,0 +1,72 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: pod-demo-svc
+  labels:
+    app.kubernetes.io/name: pod-demo-svc
+    app.kubernetes.io/part-of: pod-demo-app
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"pod-demo-deploy"}]'
+spec:
+  ports:
+    - name: http-8080
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: pod-demo-app
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: pod-demo-deploy
+  labels:
+    app.kubernetes.io/name: pod-demo-deploy
+    app.kubernetes.io/part-of: pod-demo-app
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"pod-demo-deploy"}]'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod-demo-app
+  template:
+    metadata:
+      labels:
+        app: pod-demo-app
+    spec:
+      containers:
+        - name: pod-demo
+          image: registry.home.glroland.com/ai/pod-demo:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            requests:
+              memory: "50Mi"
+              cpu: "10m"
+            limits:
+              memory: "100Mi"
+              cpu: "100m"
+      imagePullSecrets:
+        - name: glroland-registry-pull-secret
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: pod-demo
+  labels:
+    app.kubernetes.io/name: pod-demo
+    app.kubernetes.io/part-of: pod-demo-app
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"pod-demo-deploy"}]'
+spec:
+  to:
+    kind: Service
+    name: pod-demo-svc
+    weight: 100
+  port:
+    targetPort: http-8080
+  wildcardPolicy: None

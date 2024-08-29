@@ -1,0 +1,29 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: "pod-demo"
+  description: ""
+  labels:
+    app.kubernetes.io/name: pod-demo-component
+    app.kubernetes.io/part-of: pod-demo-app
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"pod-demo-deploy"}]'
+
+  links:
+    - url: 'https://devspaces.apps.ocpprod.home.glroland.com/dashboard/#/load-factory?url=https://github.com/glroland/pod-demo.git'
+      title: 'Code in DevSpaces'
+      icon: catalog
+      type: ide
+    - title: OpenShift AI
+      icon: chat
+      url: https://rhods-dashboard-redhat-ods-applications.apps.ocpprod.home.glroland.com/projects
+  tags:
+    - python
+    - ai
+    - llm
+    - rest
+spec:
+  type: service
+  lifecycle: experimental
+  owner: "group:default/glroland"
+  system: aiml
