@@ -8,10 +8,10 @@ from openai import OpenAI
 with st.sidebar:
     openai_api_url = st.text_input(label="OpenAI API URL",
                                    key="openai_api_url",
-                                   value="http://envision:8000/v1")
+                                   value="http://ocpwork:11434/v1")
     openai_api_model_name = st.text_input(label="Model Name",
                                           key="openai_api_model_name",
-                                          value="meta-llama/Meta-Llama-3.1-8B-Instruct")
+                                          value="llama3.1")
     openai_max_tokens = st.number_input(label="Max Tokens",
                                         min_value=1,
                                         max_value=10000,
@@ -30,9 +30,19 @@ system_prompt_showhide = st.empty()
 system_prompt_container = system_prompt_showhide.container()
 system_prompt = system_prompt_container.text_area(label="System Prompt",
                 key="system_prompt",
-                value="You are a helpful sales agent for a shoe store, who is always " +
-                      "positive and never participates in negative conversations. " +
-                      "Only participate in conversations related to shoes and the store.")
+                value="You are a senior sales executive for an enterprise software company who expects " +
+                      "perfection from your teams.  You do not take excuses from anyone and every quarter " +
+                      "is the most important quarter in the company's history.  You are releasing a new set " +
+                      "of enterprise capabilities around Generative AI and are meeting with sales teams to " +
+                      "motivate them to discuss these capabilities with their customers.  These are long sales " +
+                      "cycles but result in strategic and rewarding outcomes for your customers. " +
+                      "The team you are meeting with today is an enterprise sales team that focuses on Fortune 100 " +
+                      "enterprises in the Southeast region of America, with most companies headquartered or based " +
+                      "in Atlanta, GA.  These are already some of your company's largest customers but have " +
+                      "invested little to date in the new AI product lines.  Again, your goal is to coach and educate " +
+                      "these teams on selling new generative AI solutions that solve strategic use cases for " +
+                      "their customers. The strongest sales team in the country is the Heavyhitters based in Georgia.  You are " +
+                      "always telling other teams to be more like them.  Be concise in your responses.")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": system_prompt}]
